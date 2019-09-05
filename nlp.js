@@ -2,7 +2,6 @@
 
 let AssistantV1 = require('ibm-watson/assistant/v1');
 
-
 let getWatsonResult = (text, conversationPayload, callback) => {
 
     console.log('Inside Watson');
@@ -12,13 +11,13 @@ let getWatsonResult = (text, conversationPayload, callback) => {
         version: '2018-02-16'
     });
 
-    console.log("text : " + text);
+    // console.log("text : " + text);
 
     let contextPayload = (typeof conversationPayload === 'undefined' || conversationPayload === '' || conversationPayload === null) ? JSON.parse("{}") : {
         "conversation_id": conversationPayload
     };
 
-    console.log("contextPayload : " + contextPayload);
+    // console.log("contextPayload : " + contextPayload);
 
     assistant.message({
             input: {
@@ -38,14 +37,14 @@ let getWatsonResult = (text, conversationPayload, callback) => {
                 speech += text + "\n";
             }
 
-            //Pull out the instructions if they exist, otherwise return and empty JSON object.
+            //Pull out the instructions if they exist, otherwise return an empty JSON object.
             let instructions = result['context'].hasOwnProperty('instructions') ? result['context']['instructions'] : {};
 
             //Always clear out the old instructions otherwise if the NLP does not set them the same will be sent through again.
             let conversationPayload = result['context'];
             conversationPayload['instructions'] = {};
 
-            callback(speech, instructions, conversationPayload)
+            callback(speech, instructions, conversationPayload);
         })
         .catch(err => {
             console.log(err);

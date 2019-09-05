@@ -9,8 +9,10 @@ let processPostRequest = (body, path, callback) => {
             if (body.constructor !== Object) {
                 body = JSON.parse(body)
             }
+            console.log("Connect to Watson and send transcript");
             nlp.getConverseResult(body['fm-question'], body['fm-conversation'], (speech, instructions, conversationPayload) => {
-
+                console.log("Watson returned a result");
+                console.log("Speech: " + speech + " Instructions: " + instructions + " Conversation Payload: " + conversationPayload);
                 let avatarResponse = {
                     'answer': speech,
                     'instructions': instructions

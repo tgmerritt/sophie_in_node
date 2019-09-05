@@ -18,11 +18,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/transcript', function (req, res, next) {
-  let callback = (e) => {
-    return e;
-  }
-  // console.log(req);
-  res.send(handleTranscript.processPostRequest(req.body, '/api/v1/watson/converse', callback));
-})
+  console.log('body = ' + req.body);
+  handleTranscript.processPostRequest(req.body, '/api/v1/watson/converse', (responseBody) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.write(responseBody);
+    res.send();
+  });
+  // res.send(handleTranscript.processPostRequest(req.body, '/api/v1/watson/converse', processRequest));
+});
 
 module.exports = router;
