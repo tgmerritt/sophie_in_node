@@ -17,6 +17,7 @@ router.get('/', function (req, res, next) {
   awaitSingleUseToken();
 });
 
+// This isn't ever hit because we integrate directly to Watson via the UneeQ Admin Console - but this is what it would look like.
 router.post('/transcript', function (req, res, next) {
   console.log('body = ' + req.body);
   handleTranscript.processPostRequest(req.body, '/api/v1/watson/converse', (responseBody) => {
@@ -25,7 +26,6 @@ router.post('/transcript', function (req, res, next) {
     res.write(responseBody);
     res.send();
   });
-  // res.send(handleTranscript.processPostRequest(req.body, '/api/v1/watson/converse', processRequest));
 });
 
 module.exports = router;
