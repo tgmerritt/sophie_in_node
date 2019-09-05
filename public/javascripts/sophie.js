@@ -6,12 +6,9 @@ let selectedSpeaker = null;
 const baseUrl = 'https://dal-eeva.faceme.com';
 const tokenEndpoint = '/api/v1/clients/access/tokens/';
 
-// const apiKey = process.env.FM_API_KEY;
-// const customerJwtSecret = process.env.CUSTOMER_JWT_SECRET;
-
 const fm = new FaceMe({
     url: 'https://dal-admin.faceme.com',
-    conversationId: '9c7dafd7-2d90-49aa-b66a-2dfc394865e1',
+    conversationId: '60ec5c4c-dc03-4b9f-9036-4ee85f21d7fe',
     avatarVideoContainerElement: document.getElementById('avatar-container'),
     localVideoContainerElement: document.getElementById('local-container'),
     customData: {},
