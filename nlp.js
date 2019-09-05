@@ -13,7 +13,10 @@ let getWatsonResult = (text, conversationPayload, callback) => {
     });
 
     console.log("text : " + text);
-    let contextPayload = (typeof conversationPayload === 'undefined' || conversationPayload === '' || conversationPayload === null) ? JSON.parse("{}") : JSON.parse(conversationPayload);
+
+    let contextPayload = (typeof conversationPayload === 'undefined' || conversationPayload === '' || conversationPayload === null) ? JSON.parse("{}") : {
+        "conversation_id": conversationPayload
+    };
 
     console.log("contextPayload : " + contextPayload);
 
@@ -25,6 +28,9 @@ let getWatsonResult = (text, conversationPayload, callback) => {
             context: contextPayload
         })
         .then(result => {
+
+            // Watson Response
+            console.log(result);
 
             let speech = '';
 
