@@ -20,16 +20,35 @@ let token = document.getElementById('single-use-token').dataset.token;
 
 fm.initWithToken(token);
 
+function switchText() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.getElementById('prompt').innerHTML = "Press and hold screen to speak";
+    } else {
+        document.getElementById('prompt').innerHTML = "Hold <b>space</b> to speak.";
+    }
+}
+
+switchText();
+
 function fmReadyHandler() {
     addKeyListeners();
     fmReady = true;
 }
 
-function askKeyPress(e) {
-    if (e.code === 'Enter' && fmReady) {
-        fm.sendTranscript(document.getElementById('askInput').value);
-        document.getElementById('askInput').value = '';
-    }
+function addListeningText() {
+    document.getElementById('prompt').innerHTML = "Listening...";
+}
+
+function addActivePrompt() {
+    document.getElementById('prompt').removeAttribute('class', 'prompt');
+    addListeningText();
+    document.getElementById('prompt').setAttribute('class', 'prompt-active');
+}
+
+function addNonActivePrompt() {
+    document.getElementById('prompt').removeAttribute('class', 'prompt-active');
+    switchText();
+    document.getElementById('prompt').setAttribute('class', 'prompt');
 }
 
 function addAvatarTranscript(msg) {
@@ -39,11 +58,6 @@ function addAvatarTranscript(msg) {
     const transcript = document.getElementById('transcript');
     transcript.appendChild(newElement);
     transcript.scrollTop = transcript.scrollHeight;
-}
-
-function showSettings() {
-    document.getElementById('settings').classList.add('show');
-    updateDeviceList();
 }
 
 function updateDeviceList() {
@@ -85,6 +99,48 @@ function updateDeviceList() {
     }
 }
 
+function addKeyListeners() {
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
+            addActivePrompt()
+            fm.startRecording();
+        }
+    });
+    document.addEventListener('keyup', (e) => {
+        if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
+            addNonActivePrompt();
+            fm.stopRecording();
+        }
+    });
+
+    let touchScreen = document.getElementById('avatar-container');
+    touchScreen.addEventListener('touchstart', pressingDown, false);
+    touchScreen.addEventListener('touchend', notPressingDown, false);
+
+    function pressingDown() {
+        addActivePrompt();
+        fm.startRecording();
+    }
+
+    function notPressingDown() {
+        addNonActivePrompt();
+        fm.stopRecording();
+    }
+}
+
+function askKeyPress(e) {
+    if (e.key === 'Enter' && fm.ready.value === true) {
+        console.log("Sending transcript to FaceMe: " + document.getElementById('askInput').value);
+        fm.sendTranscript(document.getElementById('askInput').value);
+        document.getElementById('askInput').value = '';
+    }
+}
+
+function showSettings() {
+    document.getElementById('settings').classList.add('show');
+    updateDeviceList();
+}
+
 function hideSettings() {
     document.getElementById('settings').classList.remove('show');
 }
@@ -101,19 +157,6 @@ function setPauseState(paused) {
     }
 }
 
-function addKeyListeners() {
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
-            fm.startRecording();
-        }
-    });
-    document.addEventListener('keyup', (e) => {
-        if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
-            fm.stopRecording();
-        }
-    });
-}
-/* FaceMe SDK Message Handlers */
 fm.messages.subscribe((msg) => {
     switch (msg.faceMeMessageType) {
         case 'Ready':
@@ -126,12 +169,14 @@ fm.messages.subscribe((msg) => {
             addAvatarTranscript(msg.answer);
             break;
         case 'AvatarUnavailable':
-            document.getElementById('msg').innerHTML =
-                'Avatar Unavailable. Session will begin when an avatar becomes available.';
+            document.getElementById('msg').innerHTML = 'Avatar Unavailable. Session will begin when an avatar becomes available.';
             break;
         case 'AvatarAvailable':
             document.body.classList.add('live');
             document.getElementById('msg').innerHTML = 'Loading...';
+            break;
+        case 'AvatarAnswerContent':
+            document.getElementById('injectHTML').innerHTML = msg.content;
             break;
         case 'DeviceListUpdated':
             devices = msg.devices;
@@ -149,8 +194,26 @@ fm.messages.subscribe((msg) => {
         case 'SessionEnded':
             document.getElementById('msg').innerHTML = 'Session Ended.';
             break;
+        case 'SessionError':
+            console.log("SessionError: " + msg.error);
+            break;
         case 'ErrorEndingSession':
             console.error(msg.error);
+            break;
+        case 'SessionPaused':
+            console.log("SessionPaused");
+            break;
+        case 'SessionResumed':
+            console.log("SessionResumed");
+            break;
+        case 'RecordingStarted':
+            console.log('RecordingStarted');
+            break;
+        case 'RecordingStopped':
+            console.log('RecordingStopped');
+            break;
+        case 'AvatarAnswer':
+            console.log('AvatarAnswer');
             break;
         default:
             console.log('FaceMe: Unhandled message \'' + msg.faceMeMessageType + '\'');
