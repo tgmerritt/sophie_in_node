@@ -1,0 +1,147 @@
+
+dy {
+    padding: 0;
+    margin: 0;
+    background: #fafafa;
+    font-family: Roboto, 'sans-serif';
+}
+
+*:focus {
+    outline: none;
+}
+
+#msg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 300px;
+    height: 100px;
+    text-align: center;
+}
+
+#avatar-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+}
+
+#local-container {
+    top: 5px;
+    left: 5px;
+    width: 200px;
+    height: auto;
+}
+
+#local-transcript {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    text-shadow: 1px 1px rgba(0,0,0,0.8);
+    padding-left: 10px;
+    border-left: 4px solid #46bfac;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+#settings {
+    display: none;
+    position: absolute;
+    background-color: white;
+    margin: 5px;
+    border-radius: 4px;
+    padding: 20px;
+}
+#settings.show {
+    display: block;
+}
+#settings h2 {
+    margin: 0;
+}
+#settings h4 {
+    margin-bottom: 0;
+}
+#settings select {
+    width: 100%;
+}
+#settings button {
+    margin-top: 40px;
+}
+
+#transcript {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    bottom: 100px;
+    max-width: 500px;
+    overflow: auto;
+}
+#transcript::-webkit-scrollbar {
+    display: none;
+}
+
+#transcript .transcript-msg {
+    margin-top: 10px;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+#askInput {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(255,255,255,0.5);
+    border: none;
+    border-radius: 40px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 300;
+    display: none;
+}
+#askInput::placeholder {
+    color: white;
+    font-weight: 300;
+}
+.live #askInput {
+    display: block;
+}
+
+#prompt {
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border-radius: 40px;
+    margin: auto;
+    width: 130px;
+    text-align: center;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    padding: 5px;
+    border: 2px solid rgba(255,255,255,0.5);
+    font-size: 12px;
+    display: none;
+}
+.live #prompt {
+    display: block;
+}
+
+#controls {
+    position: absolute;
+    padding: 5px;
+    flex-direction: column;
+    display: none;
+}
+.live #controls {
+    display: flex;
+}
+#controls button {
+    margin-bottom: 5px;
+    width: 130px;
+}
+

@@ -1,0 +1,24 @@
+{
+  "name": "sophie-in-node",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "ibm-watson": "^4.4.0",
+    "jade": "~1.11.0",
+    "jwt-simple": "^0.5.6",
+    "morgan": "~1.9.1",
+    "request": "^2.88.0"
+  },
+  "author": "Tyler Merritt",
+  "license": "MIT",
+  "engines": {
+    "node": "12.9.1"
+  }
+}

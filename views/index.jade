@@ -1,0 +1,37 @@
+doctype html
+html.
+
+<head>
+<meta charset="utf-8" />
+<title>FaceMe SDK Demo</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+</head>
+
+<body>
+<div id="msg"></div>
+<div id="avatar-container"></div>
+<div id="transcript"></div>
+<div id="local-transcript"></div>
+<input type="text" id="askInput" placeholder="Type Something..." onkeypress="askKeyPress(event)" />
+<div id="prompt">Hold <b>space</b> to speak.</div>
+<div id="controls">
+<button onclick="showSettings()">Settings</button>
+<button id="pause-btn" onclick="setPauseState(true)">Pause Session</button>
+<button id="resume-btn" style="display: none;" onclick="setPauseState(false)">Resume Session</button>
+<button onclick="fm.endSession()">End</button>
+</div>
+<div id="settings">
+<h2>Settings</h2>
+<h4>Camera</h4>
+<div id="local-container"></div>
+<select id="cameraSelect" onchange="fm.setCamera(this.value)"></select>
+<h4>Microphone</h4>
+<select id="micSelect" onchange="fm.setMic(this.value)"></select>
+<h4>Speaker</h4>
+<select id="speakerSelect" onchange="fm.setSpeaker(this.value)"></select>
+<button onclick="hideSettings()">Done</button>
+<div id="single-use-token" data-token="#{locals.singleUseToken}" style="display:none"></div>
+</div>
+<script src="javascripts/bundle.js"></script>
+<script src="javascripts/sophie.js"></script>
+</body>
