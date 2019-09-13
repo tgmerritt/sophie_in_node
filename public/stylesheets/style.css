@@ -1,3 +1,8 @@
+// Place all the styles related to the conversations controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
 dy {
     padding: 0;
     margin: 0;
@@ -50,7 +55,7 @@ dy {
 
 @media screen and (max-width: 568px) {
     #local-transcript {
-        top: 20px;
+        top: 20px; // on mobile display the transcript at the top of the page
         bottom: 0px;
         border-left: 0px solid #46bfac;
     }
@@ -251,10 +256,10 @@ dy {
     box-shadow: 0 0 40px 40px #242340 inset, 0 0 0 0 #242340;
     -webkit-transition: all 150ms ease-in-out;
     transition: all 150ms ease-in-out;
-}
 
-#controls button:hover {
-    box-shadow: 0 0 10px 0 #242340 inset, 0 0 10px 4px #242340;
+    &:hover {
+        box-shadow: 0 0 10px 0 #242340 inset, 0 0 10px 4px #242340;
+    }
 }
 
 .h-template {
