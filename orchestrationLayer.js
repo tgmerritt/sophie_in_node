@@ -4,8 +4,9 @@ let nlp = new require("./nlp.js");
 //Handle the post request
 let processPostRequest = (body, path, callback) => {
     console.log('Process ' + path);
-    try {
-        if (path == '/api/v1/watson/converse') {
+
+    if (path == '/api/v1/watson/converse') {
+        try {
             if (body.constructor !== Object) {
                 body = JSON.parse(body)
             }
@@ -22,16 +23,33 @@ let processPostRequest = (body, path, callback) => {
                     "matchedContext": "",
                     conversationPayload: JSON.stringify(conversationPayload)
                 }));
-
-            })
-
-        } else {
+            });
+        } catch (e) {
+            console.log(e.toString());
             callback("{}");
         }
-    } catch (e) {
-        console.log(e.toString());
-        callback("{}");
+
+    } else if (path == '/v2/{session=projects/*/agent/sessions/*}:detectIntent') {
+        waitForDialogFlow(body, callback);
     }
+
+}
+
+async function waitForDialogFlow(body, callback) {
+    console.log("Connect to Dialogflow and send transcript");
+    await nlp.getDialogFlowResult(body['fm-question'], body['fm-conversation'], (speech, instructions, conversationPayload) => {
+        // console.log("Dialogflow returned a result");
+        // console.log("Speech: " + speech + " Instructions: " + instructions + " Conversation Payload: " + conversationPayload);
+        let avatarResponse = {
+            'answer': speech,
+            'instructions': instructions
+        };
+        callback(JSON.stringify({
+            "answer": JSON.stringify(avatarResponse),
+            "matchedContext": "",
+            conversationPayload: JSON.stringify(conversationPayload)
+        }));
+    });
 }
 
 let startServer = (port) => {

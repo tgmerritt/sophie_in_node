@@ -159,14 +159,26 @@ function setPauseState(paused) {
 
 fm.messages.subscribe((msg) => {
     switch (msg.faceMeMessageType) {
+        case 'RecordingStarted':
+            console.log('RecordingStarted');
+            break;
+        case 'RecordingStopped':
+            console.log('RecordingStopped');
+            break;
         case 'Ready':
             fmReadyHandler();
+            break;
+        case 'DevicePermissionAllowed':
+            console.log('User allowed permission to devices');
             break;
         case 'AvatarQuestionText':
             document.getElementById('local-transcript').innerHTML = msg.question;
             break;
         case 'AvatarAnswerText':
             addAvatarTranscript(msg.answer);
+            break;
+        case 'AvatarTextInputFinished':
+            console.log('Avatar Text Input Finished');
             break;
         case 'AvatarUnavailable':
             document.getElementById('msg').innerHTML = 'Avatar Unavailable. Session will begin when an avatar becomes available.';
@@ -191,6 +203,9 @@ fm.messages.subscribe((msg) => {
         case 'SetSpeakerSuccess':
             selectedSpeaker = msg.deviceId;
             break;
+        case 'SessionLive':
+            console.log('Session established');
+            break;
         case 'SessionEnded':
             document.getElementById('msg').innerHTML = 'Session Ended.';
             break;
@@ -205,12 +220,6 @@ fm.messages.subscribe((msg) => {
             break;
         case 'SessionResumed':
             console.log("SessionResumed");
-            break;
-        case 'RecordingStarted':
-            console.log('RecordingStarted');
-            break;
-        case 'RecordingStopped':
-            console.log('RecordingStopped');
             break;
         case 'AvatarAnswer':
             console.log('AvatarAnswer');
