@@ -92,3 +92,12 @@ typings/
 
 .DS_Store
 newagent-cidtks-9f99301c9c17.json
+bcg-miku-introduction-audio.mp3
+bcg-miku-introduction.txt
+bcg-miku-outro-audio.mp3
+bcg-miku-outro.txt
+heroku_logs.json
+synthesize-text-audio.mp3
+synthesize-text.txt
+watson_response.json
+wavenet.bash

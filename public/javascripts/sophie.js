@@ -1,4 +1,4 @@
-let fmReady = false;
+let uneeqReady = false;
 let devices = null;
 let selectedMic = null;
 let selectedCam = null;
@@ -6,7 +6,7 @@ let selectedSpeaker = null;
 const baseUrl = 'https://dal-eeva.faceme.com';
 const tokenEndpoint = '/api/v1/clients/access/tokens/';
 
-const fm = new FaceMe({
+const uneeq = new Uneeq({
     url: 'https://dal-admin.faceme.com',
     conversationId: '60ec5c4c-dc03-4b9f-9036-4ee85f21d7fe',
     avatarVideoContainerElement: document.getElementById('avatar-container'),
@@ -18,7 +18,7 @@ const fm = new FaceMe({
 
 let token = document.getElementById('single-use-token').dataset.token;
 
-fm.initWithToken(token);
+uneeq.initWithToken(token);
 
 function switchText() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -30,9 +30,9 @@ function switchText() {
 
 switchText();
 
-function fmReadyHandler() {
+function uneeqReadyHandler() {
     addKeyListeners();
-    fmReady = true;
+    uneeqReady = true;
 }
 
 function addListeningText() {
@@ -103,13 +103,13 @@ function addKeyListeners() {
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
             addActivePrompt()
-            fm.startRecording();
+            uneeq.startRecording();
         }
     });
     document.addEventListener('keyup', (e) => {
         if (e.code === 'Space' && !e.repeat && e.target.type !== 'text') {
             addNonActivePrompt();
-            fm.stopRecording();
+            uneeq.stopRecording();
         }
     });
 
@@ -119,19 +119,19 @@ function addKeyListeners() {
 
     function pressingDown() {
         addActivePrompt();
-        fm.startRecording();
+        uneeq.startRecording();
     }
 
     function notPressingDown() {
         addNonActivePrompt();
-        fm.stopRecording();
+        uneeq.stopRecording();
     }
 }
 
 function askKeyPress(e) {
-    if (e.key === 'Enter' && fm.ready.value === true) {
-        console.log("Sending transcript to FaceMe: " + document.getElementById('askInput').value);
-        fm.sendTranscript(document.getElementById('askInput').value);
+    if (e.key === 'Enter' && uneeq.ready.value === true) {
+        console.log("Sending transcript to Uneeq: " + document.getElementById('askInput').value);
+        uneeq.sendTranscript(document.getElementById('askInput').value);
         document.getElementById('askInput').value = '';
     }
 }
@@ -147,18 +147,18 @@ function hideSettings() {
 
 function setPauseState(paused) {
     if (paused) {
-        fm.pauseSession();
+        uneeq.pauseSession();
         document.getElementById('pause-btn').style.display = 'none';
         document.getElementById('resume-btn').style.display = 'block';
     } else {
-        fm.resumeSession();
+        uneeq.resumeSession();
         document.getElementById('pause-btn').style.display = 'block';
         document.getElementById('resume-btn').style.display = 'none';
     }
 }
 
-fm.messages.subscribe((msg) => {
-    switch (msg.faceMeMessageType) {
+uneeq.messages.subscribe((msg) => {
+    switch (msg.uneeqMessageType) {
         case 'RecordingStarted':
             console.log('RecordingStarted');
             break;
@@ -166,7 +166,7 @@ fm.messages.subscribe((msg) => {
             console.log('RecordingStopped');
             break;
         case 'Ready':
-            fmReadyHandler();
+            uneeqReadyHandler();
             break;
         case 'DevicePermissionAllowed':
             console.log('User allowed permission to devices');
@@ -225,7 +225,7 @@ fm.messages.subscribe((msg) => {
             console.log('AvatarAnswer');
             break;
         default:
-            console.log('FaceMe: Unhandled message \'' + msg.faceMeMessageType + '\'');
+            console.log('Uneeq: Unhandled message \'' + msg.uneeqMessageType + '\'');
             break;
     }
 });

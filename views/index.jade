@@ -19,20 +19,20 @@ html.
 <button onclick="showSettings()">Settings</button>
 <button id="pause-btn" onclick="setPauseState(true)">Pause Session</button>
 <button id="resume-btn" style="display: none;" onclick="setPauseState(false)">Resume Session</button>
-<button onclick="fm.endSession()">End</button>
+<button onclick="uneeq.endSession()">End</button>
 </div>
 <div id="settings">
 <h2>Settings</h2>
 <h4>Camera</h4>
 <div id="local-container"></div>
-<select id="cameraSelect" onchange="fm.setCamera(this.value)"></select>
+<select id="cameraSelect" onchange="uneeq.setCamera(this.value)"></select>
 <h4>Microphone</h4>
-<select id="micSelect" onchange="fm.setMic(this.value)"></select>
+<select id="micSelect" onchange="uneeq.setMic(this.value)"></select>
 <h4>Speaker</h4>
-<select id="speakerSelect" onchange="fm.setSpeaker(this.value)"></select>
+<select id="speakerSelect" onchange="uneeq.setSpeaker(this.value)"></select>
 <button onclick="hideSettings()">Done</button>
 <div id="single-use-token" data-token="#{locals.singleUseToken}" style="display:none"></div>
 </div>
-<script src="javascripts/bundle.js"></script>
+<script src="javascripts/uneeq_web_bundle.js"></script>
 <script src="javascripts/sophie.js"></script>
 </body>
