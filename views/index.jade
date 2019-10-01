@@ -5,34 +5,24 @@ html.
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UneeQ SDK Demo</title>
-<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/index.css">
 </head>
-
-<body style="margin:0px;">
-<div id="msg"></div>
-<div id="avatar-container"></div>
-<div id="transcript"></div>
-<div id="local-transcript"></div>
-<input type="text" id="askInput" placeholder="Type Something..." onkeypress="askKeyPress(event)" />
-<div id="prompt" class="prompt">Hold <b>space</b> to speak.</div>
-<div id="controls">
-<button onclick="showSettings()">Settings</button>
-<button id="pause-btn" onclick="setPauseState(true)">Pause Session</button>
-<button id="resume-btn" style="display: none;" onclick="setPauseState(false)">Resume Session</button>
-<button onclick="uneeq.endSession()">End</button>
+<body style="margin:0">
+<main role="main">
+<div class="background">
+<div id="link_to_start" class="container">
+<div class="uneeq_logo">
+<img src="images/UneEQ-Logo-Stacked-Rev.png" />
 </div>
-<div id="settings">
-<h2>Settings</h2>
-<h4>Camera</h4>
-<div id="local-container"></div>
-<select id="cameraSelect" onchange="uneeq.setCamera(this.value)"></select>
-<h4>Microphone</h4>
-<select id="micSelect" onchange="uneeq.setMic(this.value)"></select>
-<h4>Speaker</h4>
-<select id="speakerSelect" onchange="uneeq.setSpeaker(this.value)"></select>
-<button onclick="hideSettings()">Done</button>
-<div id="single-use-token" data-token="#{locals.singleUseToken}" style="display:none"></div>
+<h1> Here we go! </h1>
+<p>You're about to start a conversation with one of our digital humans.</p>
+<p>Your conversation transcript, video and audio recordings may be kept for the purposes of research and improving our platform.</p>
+<div id="lds-roller" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
-<script src="javascripts/uneeq_web_bundle.js"></script>
-<script src="javascripts/sophie.js"></script>
+</div>
+</main>
 </body>
+<script type="text/javascript" src="javascripts/client_side_index.js"></script>
+</html>
+
+
