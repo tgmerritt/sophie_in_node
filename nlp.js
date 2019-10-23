@@ -107,13 +107,20 @@ async function queryDialogFlow(text, conversationPayload, callback) {
     if (result.intent) {
         let speech = result.fulfillmentText;
         let instructions = {}
+
+        // In DialogFlow we can define under the Action and Parameters section of an Intent a custom parameter that is passed through with the response
+        // Setting the emotionalTone payload that we want in this custom parameter allows us to stringify JSON in, parse it here, then stringify it outbound to UneeQ
+        // thus supporting custom emotional markup like with IBM Watson
+        
         if (result.parameters.fields.hasOwnProperty('emotionalTone')) {
-            let emotion = result.parameters.fields.emotionalTone.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")
-            instructions = {
-                "emotionalTone": JSON.parse(emotion)
-            }; // Instructions will be the emotion / expression we send to UneeQ from NLP - will need to be a custom trigger in Dialogflow, perhaps using Context variables (like Watson).
-        } else {
-            console.log("No emotionalTone from DialogFlow - is it defined in the Actions and Parameters?");
+            let emotion = result.parameters.fields.emotionalTone.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")            
+            instructions["emotionalTone"] = JSON.parse(emotion);
+        }
+
+        if (result.parameters.fields.hasOwnProperty('expressionEvent')) {
+            let expression = result.parameters.fields.expressionEvent.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")
+            instructions["expressionEvent"] = JSON.parse(expression);
+            console.log("Adding custom Expression...");
         }
 
         let conversationPayload = {}; // Payload will also be populated in the future, for now empty
