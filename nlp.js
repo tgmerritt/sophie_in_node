@@ -106,10 +106,16 @@ async function queryDialogFlow(text, conversationPayload, callback) {
     // console.log(`  Response: ${result.fulfillmentText}`);
     if (result.intent) {
         let speech = result.fulfillmentText;
-        let emotion = result.parameters.fields.emotionalTone.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")
-        let instructions = {
-            "emotionalTone": JSON.parse(emotion)
-        }; // Instructions will be the emotion / expression we send to UneeQ from NLP - will need to be a custom trigger in Dialogflow, perhaps using Context variables (like Watson).
+        let instructions = {}
+        if (result.parameters.fields.hasOwnProperty('emotionalTone')) {
+            let emotion = result.parameters.fields.emotionalTone.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")
+            instructions = {
+                "emotionalTone": JSON.parse(emotion)
+            }; // Instructions will be the emotion / expression we send to UneeQ from NLP - will need to be a custom trigger in Dialogflow, perhaps using Context variables (like Watson).
+        } else {
+            console.log("No emotionalTone from DialogFlow - is it defined in the Actions and Parameters?");
+        }
+
         let conversationPayload = {}; // Payload will also be populated in the future, for now empty
         // console.log(`  Intent: ${result.intent.displayName}`);
         callback(speech, instructions, conversationPayload);
