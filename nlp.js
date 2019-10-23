@@ -81,20 +81,36 @@ async function queryDialogFlow(text, conversationPayload, callback) {
                 languageCode: 'en-US',
             },
         },
+        queryParams: {
+            knowledgeBaseNames: ["projects/newagent-cidtks/knowledgeBases/MTY2ODYxNDQ0ODI2NjM0NjQ5Ng"],
+        },
     };
 
     // Send request and log result
     const responses = await sessionClient.detectIntent(request);
-    // console.log('Detected Dialogflow intent');
     const result = responses[0].queryResult;
+    console.log(`Query text: ${result.queryText}`);
+    console.log(`Detected Intent: ${result.intent.displayName}`);
+    console.log(`Confidence: ${result.intentDetectionConfidence}`);
+    console.log(`Query Result: ${result.fulfillmentText}`);
+    if (result.knowledgeAnswers && result.knowledgeAnswers.answers) {
+        const answers = result.knowledgeAnswers.answers;
+        console.log(`There are ${answers.length} answer(s);`);
+        answers.forEach(a => {
+            console.log(`   answer: ${a.answer}`);
+            console.log(`   confidence: ${a.matchConfidence}`);
+            console.log(`   match confidence level: ${a.matchConfidenceLevel}`);
+        });
+    }
     // console.log(`  Query: ${result.queryText}`);
     // console.log(`  Response: ${result.fulfillmentText}`);
     if (result.intent) {
         let speech = result.fulfillmentText;
-        let instructions = {}; // Instructions will be the emotion / expression we send to UneeQ from NLP - will need to be a custom trigger in Dialogflow, perhaps using Context variables (like Watson).  For now, empty
-        let conversationPayload = {
-            "instructions": instructions
-        }; // Payload will also be populated in the future, for now empty
+        let emotion = result.parameters.fields.emotionalTone.stringValue.replace(/(\r\n|\n|\r)/gm, "").replace(/\s/g, "")
+        let instructions = {
+            "emotionalTone": JSON.parse(emotion)
+        }; // Instructions will be the emotion / expression we send to UneeQ from NLP - will need to be a custom trigger in Dialogflow, perhaps using Context variables (like Watson).
+        let conversationPayload = {}; // Payload will also be populated in the future, for now empty
         // console.log(`  Intent: ${result.intent.displayName}`);
         callback(speech, instructions, conversationPayload);
     } else {
