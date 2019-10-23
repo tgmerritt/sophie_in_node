@@ -1,8 +1,9 @@
 {
   "name": "sophie-in-node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
+    "preinstall": "node gcpSetup.js",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -10,6 +11,7 @@
     "debug": "~2.6.9",
     "dialogflow": "^0.11.0",
     "express": "~4.16.1",
+    "fs": "0.0.1-security",
     "http-errors": "~1.6.3",
     "ibm-watson": "^4.4.0",
     "jade": "~1.11.0",
