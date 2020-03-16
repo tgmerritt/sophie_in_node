@@ -7,22 +7,30 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "^1.4.5",
     "debug": "~2.6.9",
     "dialogflow": "^0.11.0",
     "express": "~4.16.1",
     "fs": "0.0.1-security",
     "http-errors": "~1.6.3",
-    "ibm-watson": "^4.4.0",
+    "ibm-watson": "^4.5.4",
     "jade": "~1.11.0",
     "jwt-simple": "^0.5.6",
     "morgan": "~1.9.1",
-    "request": "^2.88.0",
-    "uneeq-js": "^2.25.1"
+    "node-gyp": "^5.1.0",
+    "nodemon": "^1.19.4",
+    "request": "^2.88.2",
+    "tslint": "^5.20.1",
+    "typescript": "^3.8.3",
+    "uneeq-js": "^2.28.0"
   },
   "author": "Tyler Merritt",
   "license": "MIT",
   "engines": {
     "node": "12.9.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }

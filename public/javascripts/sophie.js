@@ -12,7 +12,6 @@ const uneeq = new Uneeq({
     avatarVideoContainerElement: document.getElementById('avatar-container'),
     localVideoContainerElement: document.getElementById('local-container'),
     customData: {},
-    apiKey: "key_here",
     logging: true
 });
 

@@ -1,8 +1,8 @@
 //const redis = require('redis');
 
 let AssistantV1 = require('ibm-watson/assistant/v1');
-const dialogflow = require('dialogflow');
 const uuid = require('uuid');
+const dialogflow = require('dialogflow');
 
 let getWatsonResult = (text, conversationPayload, callback) => {
 
@@ -58,17 +58,21 @@ let getWatsonResult = (text, conversationPayload, callback) => {
  * @param {string} projectId The project to be used
  */
 async function queryDialogFlow(text, conversationPayload, callback) {
+    
+    let contexts = JSON.parse(conversationPayload);
+    console.log(`Conversation Payload: ${JSON.parse(conversationPayload)}`);
+    if (contexts !== null && contexts !== undefined && contexts.length > 0) {
+        contexts = JSON.parse(conversationPayload);
+    } else {
+        contexts = [];
+    }
+    
     // A unique identifier for the given session
     const sessionId = uuid.v4();
 
     // Create a new session
     const sessionClient = new dialogflow.SessionsClient();
     const sessionPath = sessionClient.sessionPath(process.env.DIALOG_FLOW_PROJECT_ID, sessionId);
-
-    // Context is used for continuing a conversation - for now with Dialogflow, assume every utterance is unique (will implement context in a next step)
-    // let contextPayload = (typeof conversationPayload === 'undefined' || conversationPayload === '' || conversationPayload === null) ? JSON.parse("{}") : {
-    //     "conversation_id": result.responseId
-    // };
 
     // The text query request.
     const request = {
@@ -82,17 +86,25 @@ async function queryDialogFlow(text, conversationPayload, callback) {
             },
         },
         queryParams: {
-            knowledgeBaseNames: ["projects/newagent-cidtks/knowledgeBases/MTY2ODYxNDQ0ODI2NjM0NjQ5Ng"],
+            knowledgeBaseNames: ["projects/newagent-cidtks/knowledgeBases/MTY2ODYxNDQ0ODI2NjM0NjQ5Ng"]
         },
     };
+
+    if (contexts.length > 0) {
+        request.queryParams = {
+            contexts: contexts,
+          };
+    }
 
     // Send request and log result
     const responses = await sessionClient.detectIntent(request);
     const result = responses[0].queryResult;
+    console.log(`Full Result: ${JSON.stringify(result, null, 2)}`);
     console.log(`Query text: ${result.queryText}`);
     console.log(`Detected Intent: ${result.intent.displayName}`);
     console.log(`Confidence: ${result.intentDetectionConfidence}`);
     console.log(`Query Result: ${result.fulfillmentText}`);
+    // console.log(`Context Result: ${JSON.stringify(result.outputContexts[0], null, 2)}`);
     if (result.knowledgeAnswers && result.knowledgeAnswers.answers) {
         const answers = result.knowledgeAnswers.answers;
         console.log(`There are ${answers.length} answer(s);`);
@@ -123,13 +135,105 @@ async function queryDialogFlow(text, conversationPayload, callback) {
             console.log("Adding custom Expression...");
         }
 
-        let conversationPayload = {}; // Payload will also be populated in the future, for now empty
-        // console.log(`  Intent: ${result.intent.displayName}`);
+        let conversationPayload = {};
+        if (result.outputContexts.length !== 0) {
+            conversationPayload['context'] = result.outputContexts;
+        }
+
+        // console.log(`Conversation Payload is now: ${JSON.stringify(conversationPayload, null, 2)}`);
+        
         callback(speech, instructions, conversationPayload);
     } else {
         console.log(`  No intent matched.`);
     }
 }
+
+async function detectTextIntent(query, conversationPayload, callback) {
+    // [START dialogflow_detect_intent_text]
+  
+    /**
+     * TODO(developer): UPDATE these variables before running the sample.
+     */
+    // projectId: ID of the GCP project where Dialogflow agent is deployed
+    // const projectId = 'PROJECT_ID';
+    // sessionId: Random number or hashed user identifier
+    // const sessionId = 123456;
+    // queries: A set of sequential queries to be send to Dialogflow agent for Intent Detection
+    // const queries = [
+    //   'Reserve a meeting room in Toronto office, there will be 5 of us',
+    //   'Next monday at 3pm for 1 hour, please', // Tell the bot when the meeting is taking place
+    //   'B'  // Rooms are defined on the Dialogflow agent, default options are A, B, or C
+    // ]
+    // languageCode: Indicates the language Dialogflow agent should use to detect intents
+    // const languageCode = 'en';
+
+    const sessionId = uuid.v4()
+    const projectId = process.env.DIALOG_FLOW_PROJECT_ID;
+    const languageCode = 'en-US';
+  
+    // Instantiates a session client
+    const sessionClient = new dialogflow.SessionsClient();
+  
+    async function detectIntent(
+      projectId,
+      sessionId,
+      query,
+      contexts,
+      languageCode
+    ) {
+      // The path to identify the agent that owns the created intent.
+    //   const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+      const sessionPath = sessionClient.sessionPath(process.env.DIALOG_FLOW_PROJECT_ID, sessionId);
+  
+      // The text query request.
+      const request = {
+        session: sessionPath,
+        queryInput: {
+          text: {
+            text: query,
+            languageCode: languageCode,
+          },
+        },
+      };
+  
+      if (contexts && contexts.length > 0) {
+        request.queryParams = {
+          contexts: contexts,
+        };
+      }
+  
+      const responses = await sessionClient.detectIntent(request);
+      return responses[0];
+    }
+  
+    async function executeQueries(projectId, sessionId, queries, languageCode) {
+      // Keeping the context across queries let's us simulate an ongoing conversation with the bot
+      let context;
+      let intentResponse;
+      for (const query of queries) {
+        try {
+          console.log(`Sending Query: ${query}`);
+          intentResponse = await detectIntent(
+            projectId,
+            sessionId,
+            query,
+            context,
+            languageCode
+          );
+          console.log('Detected intent');
+          console.log(
+            `Fulfillment Text: ${intentResponse.queryResult.fulfillmentText}`
+          );
+          // Use the context from this response for next queries
+          context = intentResponse.queryResult.outputContexts;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+    executeQueries(projectId, sessionId, queries, languageCode);
+    // [END dialogflow_detect_intent_text]
+  }
 
 let setEmotion = (emotion) => {
     console.log("Emotion being set = " + emotion);
@@ -138,7 +242,8 @@ let setEmotion = (emotion) => {
 
 module.exports = {
     getConverseResult: getWatsonResult,
-    getDialogFlowResult: queryDialogFlow,
+    // getDialogFlowResult: queryDialogFlow,
+    getDialogFlowResult: detectTextIntent,
     setEmotion: setEmotion
 
 };
