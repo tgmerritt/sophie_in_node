@@ -2,7 +2,7 @@ let jwt = require('jwt-simple');
 let request = require('request');
 let server = new require("./server.js");
 
-const baseUrl = 'https://dal-eeva.faceme.com';
+const baseUrl = 'https://api.us.uneeq.io';
 const tokenEndpoint = '/api/v1/clients/access/tokens/';
 const apiKey = process.env.FM_API_KEY;
 const customerJwtSecret = process.env.CUSTOMER_JWT_SECRET;

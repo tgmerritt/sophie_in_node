@@ -7,7 +7,7 @@ const baseUrl = 'https://dal-eeva.faceme.com';
 const tokenEndpoint = '/api/v1/clients/access/tokens/';
 
 const uneeq = new Uneeq({
-    url: 'https://dal-admin.faceme.com',
+    url: 'https://api.us.uneeq.io',
     conversationId: '60ec5c4c-dc03-4b9f-9036-4ee85f21d7fe',
     avatarVideoContainerElement: document.getElementById('avatar-container'),
     localVideoContainerElement: document.getElementById('local-container'),
