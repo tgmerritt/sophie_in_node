@@ -39,7 +39,7 @@ async function getSingleUseToken() {
             url: baseUrl + tokenEndpoint,
             headers: {
                 'Content-Type': 'application/jwt',
-                'workspace': '60ec5c4c-dc03-4b9f-9036-4ee85f21d7fe'
+                'workspace': process.env.FM_WORKSPACE
             },
             body: token,
             method: 'POST'
