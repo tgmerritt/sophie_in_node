@@ -4,7 +4,6 @@ let server = new require("./server.js");
 
 const baseUrl = 'https://api.us.uneeq.io';
 const tokenEndpoint = '/api/v1/clients/access/tokens/';
-const apiKey = process.env.FM_API_KEY;
 const customerJwtSecret = process.env.CUSTOMER_JWT_SECRET;
 
 //Handle the post request
@@ -39,8 +38,8 @@ async function getSingleUseToken() {
         request.post({
             url: baseUrl + tokenEndpoint,
             headers: {
-                'faceme-api-key': apiKey,
-                'Content-Type': 'application/jwt'
+                'Content-Type': 'application/jwt',
+                'workspace': '60ec5c4c-dc03-4b9f-9036-4ee85f21d7fe'
             },
             body: token,
             method: 'POST'

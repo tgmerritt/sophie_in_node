@@ -18,7 +18,7 @@
     "jwt-simple": "^0.5.6",
     "morgan": "~1.9.1",
     "node-gyp": "^5.1.0",
-    "nodemon": "^1.19.4",
+    "nodemon": "^2.0.2",
     "request": "^2.88.2",
     "tslint": "^5.20.1",
     "typescript": "^3.8.3",
